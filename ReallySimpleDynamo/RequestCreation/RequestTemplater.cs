@@ -10,7 +10,7 @@ namespace ReallySimpleDynamo.RequestCreation
         /// <summary>
         /// Reference: http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/MakingHTTPRequests.html
         /// </summary>
-        public HttpWebRequest CreateRequestTemplate(ClientConfiguration configuration, string methodNameCalled, DateTime? timestamp = null)
+        public HttpWebRequest CreateRequestTemplate(ClientConfiguration configuration, string awsService, DateTime? timestamp = null)
         {
             var dateBase = timestamp.HasValue ? timestamp.Value : DateTime.Now;
 
@@ -21,7 +21,7 @@ namespace ReallySimpleDynamo.RequestCreation
             req.Method = "POST";
 
             req.Headers.Add("X-Amz-Date", dateBase.ToString(Iso8601BasicDateTimeFormat));
-            req.Headers.Add("X-Amz-Target", methodNameCalled);
+            req.Headers.Add("X-Amz-Target", awsService);
 
             return req;
         }

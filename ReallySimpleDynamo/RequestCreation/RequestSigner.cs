@@ -13,13 +13,11 @@ namespace ReallySimpleDynamo.RequestCreation
 
             var hashAlgo = new Sha256();
 
-            var contentSh256 = "";
-            var signature = "";
-            var credentialValue = "";
-
-            var hmacCredential = new AuthorizationCredential(credentialValue, CredentialType.DynamoDb, dateBase, configuration.AvailabilityZone);
+            //var contentSha256 = "";
+            var signature = hashAlgo.ComputeSignature(configuration.AwsSecretAccessKey, configuration.AvailabilityZone, dateBase, request.Headers["X-Amz-Target"]);
+            var hmacCredential = new AuthorizationCredential(configuration.AwsSecretAccessKey, CredentialType.DynamoDb, dateBase, configuration.AvailabilityZone);
             
-            request.Headers.Add("X-Amz-Content-SHA256", contentSh256);
+            //request.Headers.Add("X-Amz-Content-SHA256", contentSha256); - this might be optional, not mentioned in docs?
             request.Headers.Add("Authorization", AuthHeader(hashAlgo, hmacCredential, signature));
         }
 

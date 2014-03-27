@@ -5,6 +5,6 @@ namespace ReallySimpleDynamo.RequestCreation
 {
     public interface ICreateRequestTemplates
     {
-        HttpWebRequest CreateRequestTemplate(ClientConfiguration configuration, string methodNameCalled, DateTime? timestamp = null);
+        HttpWebRequest CreateRequestTemplate(ClientConfiguration configuration, string awsService, DateTime? timestamp = null);
     }
 }

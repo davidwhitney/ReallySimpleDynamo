@@ -5,6 +5,7 @@ namespace ReallySimpleDynamo
     public class ClientConfiguration
     {
         public string AvailabilityZone { get; set; }
+        public string AwsSecretAccessKey { get; set; }
 
         public Uri DatabaseUri
         {
@@ -13,6 +14,7 @@ namespace ReallySimpleDynamo
 
         public ClientConfiguration()
         {
+            AwsSecretAccessKey = "";
             AvailabilityZone = "eu-west-1";
         }
     }

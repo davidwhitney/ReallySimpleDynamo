@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -9,11 +8,10 @@ namespace ReallySimpleDynamo.RequestCreation.SignatureVersion4
     {
         public string Name { get { return "AWS4-HMAC-SHA256"; } }
 
-        public string ComputeSignature(string awsAccessKeyId, string awsSecretAccessKey, string region, string signedAt, string service,
-            string canonicalizeHeaderNames, string canonicalRequest)
+        public string ComputeSignature(string awsSecretAccessKey, string region, DateTime signedAt, string service)
         {
             var kSecret = awsSecretAccessKey;
-            var kDate = Hmac("AWS4" + kSecret, signedAt);
+            var kDate = Hmac("AWS4" + kSecret, signedAt.ToString("yyyyMMdd"));
             var kRegion = Hmac(kDate, region);
             var kService = Hmac(kRegion, service);
             return Hmac(kService, "aws4_request");
@@ -26,11 +24,7 @@ namespace ReallySimpleDynamo.RequestCreation.SignatureVersion4
             if (string.IsNullOrEmpty(key)) throw new ArgumentNullException("key", "Please specify a Secret Signing Key.");
             if (binaryData == null || binaryData.Length == 0) throw new ArgumentNullException("data", "Please specify data to sign.");
 
-            var algorithm = KeyedHashAlgorithm.Create(Name.ToUpper(CultureInfo.InvariantCulture));
-            if (null == algorithm)
-            {
-                throw new InvalidOperationException("Please specify a KeyedHashAlgorithm to use.");
-            }
+            var algorithm = KeyedHashAlgorithm.Create("HMACSHA256");
 
             try
             {
