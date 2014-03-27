@@ -52,7 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DynamoClient\DynamoClientTests_WhenClientIsConstructed.cs" />
     <Compile Include="DynamoClient\DynamoClientTests_WhenGetTIsCalled.cs" />
-    <Compile Include="RequestTemplaterTests.cs" />
+    <Compile Include="RequestCreation\RequestTemplaterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

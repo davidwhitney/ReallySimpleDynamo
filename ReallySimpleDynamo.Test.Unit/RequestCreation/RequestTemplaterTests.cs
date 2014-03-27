@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Net;
 using NUnit.Framework;
-using System.Linq;
 using ReallySimpleDynamo.RequestCreation;
 
-namespace ReallySimpleDynamo.Test.Unit
+namespace ReallySimpleDynamo.Test.Unit.RequestCreation
 {
     public class RequestTemplaterTests
     {
@@ -17,7 +16,7 @@ namespace ReallySimpleDynamo.Test.Unit
         {
             _cfg = new ClientConfiguration {AvailabilityZone = "testzone"};
             _client = new RequestTemplater();
-            _template = _client.CreateRequestTemplate(_cfg);
+            _template = _client.CreateRequestTemplate(_cfg, "MethodNameCalled", new DateTime(2013, 03, 15, 09, 20, 54));
         }
 
         [Test]
@@ -42,6 +41,18 @@ namespace ReallySimpleDynamo.Test.Unit
         public void CreateRequestTemplate_HttpMethodIsPost()
         {
             Assert.That(_template.Method, Is.EqualTo("POST"));
+        }
+
+        [Test]
+        public void CreateRequestTemplate_AmazonMethodNameHeaderSet()
+        {
+            Assert.That(_template.Headers["X-Amz-Target"], Is.EqualTo("MethodNameCalled"));
+        }
+
+        [Test]
+        public void CreateRequestTemplate_AmazonTimeHeadeSet()
+        {
+            Assert.That(_template.Headers["X-Amz-Date"], Is.EqualTo("20130315T092054Z"));
         }
 
         [Test]

@@ -29,8 +29,7 @@ namespace ReallySimpleDynamo
             if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentNullException("tableName");
             if (key == null) throw new ArgumentNullException("key");
 
-            var request = _requestTemplater.CreateRequestTemplate(ClientConfiguration);
-            request.Headers.Add("X-Amz-Target", "DynamoDB_20120810.GetItem");
+            var request = _requestTemplater.CreateRequestTemplate(ClientConfiguration, "DynamoDB_20120810.GetItem");
 
             var body = ""; // TODO: Serialize request here
 
