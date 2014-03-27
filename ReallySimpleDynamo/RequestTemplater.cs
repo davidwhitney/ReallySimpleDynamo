@@ -5,6 +5,7 @@ namespace ReallySimpleDynamo
 {
     public class RequestTemplater : ICreateRequestTemplates
     {
+        // TODO: Implement hashing algos lifted from official SDK.
         public HttpWebRequest CreateRequestTemplate(ClientConfiguration configuration)
         {
             var contentSh256 = "";
