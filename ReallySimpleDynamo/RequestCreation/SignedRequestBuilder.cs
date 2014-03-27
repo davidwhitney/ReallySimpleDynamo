@@ -29,7 +29,7 @@ namespace ReallySimpleDynamo.RequestCreation
             req.Headers.Add("X-Amz-Date", dateBase.ToString(Iso8601BasicDateTimeFormat));
             req.Headers.Add("X-Amz-Target", awsService);
 
-            _signer.Sign(req, configuration);
+            _signer.Sign(req, configuration, dateBase);
             return req;
         }
     }

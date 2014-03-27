@@ -13,12 +13,10 @@ namespace ReallySimpleDynamo.RequestCreation
             _hashingAlogirthm = hashingAlogirthm;
         }
 
-        public void Sign(HttpWebRequest request, ClientConfiguration configuration, DateTime? timestamp = null)
+        public void Sign(HttpWebRequest request, ClientConfiguration configuration, DateTime timestamp)
         {
-            var dateBase = timestamp.HasValue ? timestamp.Value : DateTime.Now;
-
-            var signature = _hashingAlogirthm.ComputeSignature(configuration.AwsSecretAccessKey, configuration.AvailabilityZone, dateBase, request.Headers["X-Amz-Target"]);
-            var hmacCredential = new AuthorizationCredential(configuration.AwsSecretAccessKey, CredentialType.DynamoDb, dateBase, configuration.AvailabilityZone);
+            var signature = _hashingAlogirthm.ComputeSignature(configuration.AwsSecretAccessKey, configuration.AvailabilityZone, timestamp, request.Headers["X-Amz-Target"]);
+            var hmacCredential = new AuthorizationCredential(configuration.AwsSecretAccessKey, CredentialType.DynamoDb, timestamp, configuration.AvailabilityZone);
             
             //var contentSha256 = "";
             //request.Headers.Add("X-Amz-Content-SHA256", contentSha256); - this might be optional, not mentioned in docs?
