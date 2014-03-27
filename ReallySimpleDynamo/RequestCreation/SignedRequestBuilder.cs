@@ -18,7 +18,7 @@ namespace ReallySimpleDynamo.RequestCreation
         /// </summary>
         public HttpWebRequest CreateRequest(ClientConfiguration configuration, string awsService, DateTime? timestamp = null)
         {
-            var dateBase = timestamp.HasValue ? timestamp.Value : DateTime.Now;
+            var signatureDate = timestamp.HasValue ? timestamp.Value : DateTime.Now;
 
             var req = WebRequest.CreateHttp(configuration.DatabaseUri);
             req.UserAgent = "aws-sdk-dotnet-45/2.0.12.0 .NET Runtime/4.0 .NET Framework/4.0 OS/6.3.9600.0";
@@ -26,10 +26,10 @@ namespace ReallySimpleDynamo.RequestCreation
             req.Accept = "application/json";
             req.Method = "POST";
 
-            req.Headers.Add("X-Amz-Date", dateBase.ToString(Iso8601BasicDateTimeFormat));
+            req.Headers.Add("X-Amz-Date", signatureDate.ToString(Iso8601BasicDateTimeFormat));
             req.Headers.Add("X-Amz-Target", awsService);
 
-            _signer.Sign(req, configuration, dateBase);
+            _signer.Sign(req, configuration, signatureDate);
             return req;
         }
     }
