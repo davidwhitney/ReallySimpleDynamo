@@ -7,7 +7,7 @@ namespace ReallySimpleDynamo.Test.Unit.RequestCreation
 {
     public class RequestTemplaterTests
     {
-        private RequestTemplater _client;
+        private SignedRequestBuilder _client;
         private ClientConfiguration _cfg;
         private HttpWebRequest _template;
 
@@ -15,8 +15,8 @@ namespace ReallySimpleDynamo.Test.Unit.RequestCreation
         public void SetUp()
         {
             _cfg = new ClientConfiguration {AvailabilityZone = "testzone"};
-            _client = new RequestTemplater();
-            _template = _client.CreateRequestTemplate(_cfg, "MethodNameCalled", new DateTime(2013, 03, 15, 09, 20, 54));
+            _client = new SignedRequestBuilder();
+            _template = _client.CreateRequest(_cfg, "MethodNameCalled", new DateTime(2013, 03, 15, 09, 20, 54));
         }
 
         [Test]

@@ -7,7 +7,7 @@ namespace ReallySimpleDynamo.RequestCreation
     public class RequestSigner : ISignRequests
     {
         // TODO: Implement hashing algos lifted from official SDK.
-        public void Sign(HttpWebRequest request, ClientConfiguration configuration, string body, DateTime? timestamp = null)
+        public void Sign(HttpWebRequest request, ClientConfiguration configuration, DateTime? timestamp = null)
         {
             var dateBase = timestamp.HasValue ? timestamp.Value : DateTime.Now;
 

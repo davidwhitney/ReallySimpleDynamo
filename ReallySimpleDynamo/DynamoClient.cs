@@ -11,19 +11,17 @@ namespace ReallySimpleDynamo
         public ClientConfiguration ClientConfiguration { get; set; }
         public IHttpClient HttpClient { get; set; }
         
-        private readonly ICreateRequestTemplates _requestTemplater;
-        private readonly ISignRequests _signer;
+        private readonly ICreateSignedRequests _requestTemplater;
         private readonly IJsonSerializer _serializer;
 
-        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null, ISignRequests signer = null, IJsonSerializer serializer = null)
+        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateSignedRequests requestCreator = null, IJsonSerializer serializer = null)
         {
             if (clientConfiguration == null) throw new ArgumentNullException("clientConfiguration");
 
             ClientConfiguration = clientConfiguration;
             HttpClient = httpClient ?? new HttpClientWrapper();
 
-            _requestTemplater = requestTemplater ?? new RequestTemplater();
-            _signer = signer ?? new RequestSigner();
+            _requestTemplater = requestCreator ?? new SignedRequestBuilder();
             _serializer = serializer ?? new JsonDotNetSerializer();
         }
 
@@ -34,9 +32,7 @@ namespace ReallySimpleDynamo
 
             var body = _serializer.Serialize(key);
 
-            var request = _requestTemplater.CreateRequestTemplate(ClientConfiguration, "DynamoDB_20120810.GetItem");
-            _signer.Sign(request, ClientConfiguration, body);
-            
+            var request = _requestTemplater.CreateRequest(ClientConfiguration, "DynamoDB_20120810.GetItem");
             var response = HttpClient.Send(request, body);
 
             if (response == null || response.Body == null)

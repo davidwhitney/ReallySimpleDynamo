@@ -3,14 +3,14 @@ using System.Net;
 
 namespace ReallySimpleDynamo.RequestCreation
 {
-    public class RequestTemplater : ICreateRequestTemplates
+    public class SignedRequestBuilder : ICreateSignedRequests
     {
         public const string Iso8601BasicDateTimeFormat = "yyyyMMddTHHmmssZ";
         
         /// <summary>
         /// Reference: http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/MakingHTTPRequests.html
         /// </summary>
-        public HttpWebRequest CreateRequestTemplate(ClientConfiguration configuration, string awsService, DateTime? timestamp = null)
+        public HttpWebRequest CreateRequest(ClientConfiguration configuration, string awsService, DateTime? timestamp = null)
         {
             var dateBase = timestamp.HasValue ? timestamp.Value : DateTime.Now;
 
@@ -23,6 +23,7 @@ namespace ReallySimpleDynamo.RequestCreation
             req.Headers.Add("X-Amz-Date", dateBase.ToString(Iso8601BasicDateTimeFormat));
             req.Headers.Add("X-Amz-Target", awsService);
 
+            new RequestSigner().Sign(req, configuration);
             return req;
         }
     }
