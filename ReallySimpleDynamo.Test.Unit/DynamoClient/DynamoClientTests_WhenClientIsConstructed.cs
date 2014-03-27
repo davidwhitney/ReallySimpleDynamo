@@ -1,6 +1,7 @@
 ﻿using System;
 using Moq;
 using NUnit.Framework;
+using ReallySimpleDynamo.Http;
 
 namespace ReallySimpleDynamo.Test.Unit.DynamoClient
 {
@@ -22,9 +23,11 @@ namespace ReallySimpleDynamo.Test.Unit.DynamoClient
         }
 
         [Test]
-        public void Ctor_NoHttpChannelSupplied_Throws()
+        public void Ctor_NoHttpClientSupplied_CreatesDefaultClient()
         {
-            Assert.Throws<ArgumentNullException>(() => new ReallySimpleDynamo.DynamoClient(new ClientConfiguration(), null));
+            var client = new ReallySimpleDynamo.DynamoClient(new ClientConfiguration());
+
+            Assert.That(client.HttpClient, Is.Not.Null);
         }
 
         [Test]

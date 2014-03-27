@@ -1,8 +1,10 @@
 using System;
-using System.Linq;
-using System.Net.Http;
+using System.Net;
 using Moq;
 using NUnit.Framework;
+using ReallySimpleDynamo.Http;
+using ReallySimpleDynamo.Model;
+using System.Linq;
 
 namespace ReallySimpleDynamo.Test.Unit.DynamoClient
 {
@@ -11,44 +13,46 @@ namespace ReallySimpleDynamo.Test.Unit.DynamoClient
     {
         private ReallySimpleDynamo.DynamoClient _client;
         private Mock<IHttpClient> _mockHttp;
-        private HttpRequestMessage _httpResponse;
+        private HttpWebRequest _constructedRequest;
         private Key _key;
 
         [SetUp]
         public void SetUp()
         {
             _mockHttp = new Mock<IHttpClient>();
-            _mockHttp.Setup(x => x.Send(It.IsAny<HttpRequestMessage>()))
-                .Returns(new HttpResponseMessage())
-                .Callback(new Action<HttpRequestMessage>(req => _httpResponse = req));
+            _mockHttp.Setup(x => x.Send(It.IsAny<HttpWebRequest>(), It.IsAny<string>()))
+                .Returns(new Response())
+                .Callback(new Action<HttpWebRequest, string>((req, body) => _constructedRequest = req));
 
             _key = new Key
             {
                 {"ColumnName", new AttributeValue {S = "some-s-value"}}
             };
 
-            _client = new ReallySimpleDynamo.DynamoClient(new ClientConfiguration(), _mockHttp.Object);
+            _client = new ReallySimpleDynamo.DynamoClient(new ClientConfiguration{AvailabilityZone = "testzone"}, _mockHttp.Object);
         }
         
         [Test]
         public void TableNameNotSupplied_ThrowsArgNull()
         {
-            Assert.Throws<ArgumentNullException>(()=>_client.Get<MyDto>("", new Key()));
+            Assert.Throws<ArgumentNullException>(()=>_client.Get<SomeDto>("", _key));
         }
 
         [Test]
         public void KeyNotSupplied_ThrowsArgNull()
         {
-            Assert.Throws<ArgumentNullException>(()=>_client.Get<MyDto>("tableName", null));
+            Assert.Throws<ArgumentNullException>(()=>_client.Get<SomeDto>("tableName", null));
         }
 
         [Test]
-        public void ValidRequest_RequestIsMadeWithCorrect_ContainsAmazonTargetHeader()
+        public void CreateRequestTemplate_ContainsAmazonTargetHeader()
         {
-            _client.Get<MyDto>("tableName", _key);
+            _client.Get<SomeDto>("tableName", _key);
 
-            Assert.That(_httpResponse.Headers.Contains("X-Amz-Target"));
-            Assert.That(_httpResponse.Headers.GetValues("X-Amz-Target").First(), Is.EqualTo("DynamoDB_20120810.GetItem"));
+            Assert.That(_constructedRequest.Headers.AllKeys.Contains("X-Amz-Target"));
+            Assert.That(_constructedRequest.Headers["X-Amz-Target"], Is.EqualTo("DynamoDB_20120810.GetItem"));
         }
+
+        public class SomeDto {}
     }
 }

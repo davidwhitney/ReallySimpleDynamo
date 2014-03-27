@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
+using ReallySimpleDynamo.Http;
+using ReallySimpleDynamo.Model;
 
 namespace ReallySimpleDynamo
 {
@@ -8,14 +8,17 @@ namespace ReallySimpleDynamo
     {
         public ClientConfiguration ClientConfiguration { get; set; }
         public IHttpClient HttpClient { get; set; }
+        
+        private readonly ICreateRequestTemplates _requestTemplater;
 
-        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient)
+        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null)
         {
             if (clientConfiguration == null) throw new ArgumentNullException("clientConfiguration");
-            if (httpClient == null) throw new ArgumentNullException("httpClient");
 
             ClientConfiguration = clientConfiguration;
-            HttpClient = httpClient;
+            HttpClient = httpClient ?? new HttpClientWrapper();
+
+            _requestTemplater = requestTemplater ?? new RequestTemplater();
         }
 
         public T Get<T>(string tableName, Key key) where T : class
@@ -23,48 +26,16 @@ namespace ReallySimpleDynamo
             if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentNullException("tableName");
             if (key == null) throw new ArgumentNullException("key");
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://www.google.com");
-
+            var request = _requestTemplater.CreateRequestTemplate(ClientConfiguration);
             request.Headers.Add("X-Amz-Target", "DynamoDB_20120810.GetItem");
 
-            var response = HttpClient.Send(request);
+            var body = ""; // TODO: Serialize request here
+            
+            var response = HttpClient.Send(request, body);
+            var dto = default(T); // TODO: Deserialize response.Body here;
 
-            return response as T;
-        }
-    }
-
-    public interface IHttpClient
-    {
-        HttpResponseMessage Send(HttpRequestMessage request);
-    }
-
-    public class HttpClientWrapper : IHttpClient
-    {
-        private readonly HttpClient _client;
-
-        public HttpClientWrapper() : this(new HttpClient()) { }
-        public HttpClientWrapper(HttpClient client)
-        {
-            _client = client;
+            return dto;
         }
 
-        public HttpResponseMessage Send(HttpRequestMessage request)
-        {
-            return _client.SendAsync(request).Result;
-        }
-    }
-
-    public class Key : Dictionary<string, AttributeValue>
-    {
-        
-    }
-
-    public class AttributeValue
-    {
-        public string S { get; set; }
-    }
-
-    public class ClientConfiguration
-    {
     }
 }
