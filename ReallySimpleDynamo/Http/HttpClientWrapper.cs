@@ -20,10 +20,18 @@ namespace ReallySimpleDynamo.Http
             }
 
             using (var response = request.GetResponse())
-            using (var sr = new StreamReader(response.GetResponseStream()))
             {
-                var bodyContents = sr.ReadToEnd();
-                return new Response {Body = bodyContents, ResponseWrapper = response};
+                var stream = response.GetResponseStream();
+
+                if (stream == null)
+                {
+                    return new Response {Body = body, ResponseWrapper = response};
+                }
+
+                using (var sr = new StreamReader(stream))
+                {
+                    return new Response {Body = sr.ReadToEnd(), ResponseWrapper = response};
+                }
             }
         }
     }
