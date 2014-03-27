@@ -10,8 +10,9 @@ namespace ReallySimpleDynamo
         public IHttpClient HttpClient { get; set; }
         
         private readonly ICreateRequestTemplates _requestTemplater;
+        private ISignRequests _signer;
 
-        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null)
+        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null, ISignRequests signer = null)
         {
             if (clientConfiguration == null) throw new ArgumentNullException("clientConfiguration");
 
@@ -19,6 +20,7 @@ namespace ReallySimpleDynamo
             HttpClient = httpClient ?? new HttpClientWrapper();
 
             _requestTemplater = requestTemplater ?? new RequestTemplater();
+            _signer = signer ?? new RequestSigner();
         }
 
         public T Get<T>(string tableName, Key key) where T : class
@@ -30,6 +32,8 @@ namespace ReallySimpleDynamo
             request.Headers.Add("X-Amz-Target", "DynamoDB_20120810.GetItem");
 
             var body = ""; // TODO: Serialize request here
+
+            _signer.Sign(request, ClientConfiguration, body);
             
             var response = HttpClient.Send(request, body);
             var dto = default(T); // TODO: Deserialize response.Body here;
