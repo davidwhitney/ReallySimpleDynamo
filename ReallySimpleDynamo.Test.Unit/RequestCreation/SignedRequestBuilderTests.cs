@@ -5,7 +5,7 @@ using ReallySimpleDynamo.RequestCreation;
 
 namespace ReallySimpleDynamo.Test.Unit.RequestCreation
 {
-    public class RequestTemplaterTests
+    public class SignedRequestBuilderTests
     {
         private SignedRequestBuilder _client;
         private ClientConfiguration _cfg;

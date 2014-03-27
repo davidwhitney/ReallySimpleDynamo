@@ -52,10 +52,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DynamoClient\DynamoClientTests_WhenClientIsConstructed.cs" />
     <Compile Include="DynamoClient\DynamoClientTests_WhenGetTIsCalled.cs" />
-    <Compile Include="RequestCreation\RequestTemplaterTests.cs" />
+    <Compile Include="RequestCreation\SignedRequestBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="RequestCreation\SignatureVersion4\AuthorizationCredentialTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ReallySimpleDynamo\ReallySimpleDynamo.csproj">
