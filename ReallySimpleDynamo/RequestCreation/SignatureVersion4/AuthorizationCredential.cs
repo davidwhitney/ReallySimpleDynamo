@@ -24,7 +24,7 @@ namespace ReallySimpleDynamo.RequestCreation.SignatureVersion4
             var credentialSegments = new []
             {
                 _credentialValue, 
-                _date.ToString("yyyy-MM-dd"), 
+                _date.ToString("yyyyMMdd"), 
                 _availabilityZone.ToLower(), 
                 _credType.ToString().ToLower(), 
                 AwsSignatureVersion4Terminator
