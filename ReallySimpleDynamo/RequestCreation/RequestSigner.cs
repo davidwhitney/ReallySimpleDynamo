@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace ReallySimpleDynamo
+namespace ReallySimpleDynamo.RequestCreation
 {
     public class RequestSigner : ISignRequests
     {

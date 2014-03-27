@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ReallySimpleDynamo
+namespace ReallySimpleDynamo.RequestCreation
 {
     public interface ICreateRequestTemplates
     {

@@ -2,6 +2,7 @@
 using System.Net;
 using NUnit.Framework;
 using System.Linq;
+using ReallySimpleDynamo.RequestCreation;
 
 namespace ReallySimpleDynamo.Test.Unit
 {

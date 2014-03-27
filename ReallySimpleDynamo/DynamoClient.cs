@@ -1,6 +1,7 @@
 ﻿using System;
 using ReallySimpleDynamo.Http;
 using ReallySimpleDynamo.Model;
+using ReallySimpleDynamo.RequestCreation;
 
 namespace ReallySimpleDynamo
 {
@@ -10,7 +11,7 @@ namespace ReallySimpleDynamo
         public IHttpClient HttpClient { get; set; }
         
         private readonly ICreateRequestTemplates _requestTemplater;
-        private ISignRequests _signer;
+        private readonly ISignRequests _signer;
 
         public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null, ISignRequests signer = null)
         {
