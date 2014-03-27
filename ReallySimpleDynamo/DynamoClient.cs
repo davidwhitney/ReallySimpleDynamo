@@ -2,6 +2,7 @@
 using ReallySimpleDynamo.Http;
 using ReallySimpleDynamo.Model;
 using ReallySimpleDynamo.RequestCreation;
+using ReallySimpleDynamo.Serialization;
 
 namespace ReallySimpleDynamo
 {
@@ -12,8 +13,9 @@ namespace ReallySimpleDynamo
         
         private readonly ICreateRequestTemplates _requestTemplater;
         private readonly ISignRequests _signer;
+        private readonly IJsonSerializer _serializer;
 
-        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null, ISignRequests signer = null)
+        public DynamoClient(ClientConfiguration clientConfiguration, IHttpClient httpClient = null, ICreateRequestTemplates requestTemplater = null, ISignRequests signer = null, IJsonSerializer serializer = null)
         {
             if (clientConfiguration == null) throw new ArgumentNullException("clientConfiguration");
 
@@ -22,23 +24,27 @@ namespace ReallySimpleDynamo
 
             _requestTemplater = requestTemplater ?? new RequestTemplater();
             _signer = signer ?? new RequestSigner();
+            _serializer = serializer ?? new JsonDotNetSerializer();
         }
 
-        public T Get<T>(string tableName, Key key) where T : class
+        public ResponseEnvelope<T> Get<T>(string tableName, Key key) where T : class
         {
             if (string.IsNullOrWhiteSpace(tableName)) throw new ArgumentNullException("tableName");
             if (key == null) throw new ArgumentNullException("key");
 
+            var body = _serializer.Serialize(key);
+
             var request = _requestTemplater.CreateRequestTemplate(ClientConfiguration, "DynamoDB_20120810.GetItem");
-
-            var body = ""; // TODO: Serialize request here
-
             _signer.Sign(request, ClientConfiguration, body);
             
             var response = HttpClient.Send(request, body);
-            var dto = default(T); // TODO: Deserialize response.Body here;
 
-            return dto;
+            if (response == null || response.Body == null)
+            {
+                return new ResponseEnvelope<T>();
+            }
+
+            return _serializer.Deserialize<ResponseEnvelope<T>>(response.Body);
         }
 
     }

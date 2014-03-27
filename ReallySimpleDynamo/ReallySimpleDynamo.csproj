@@ -63,6 +63,8 @@
     <Compile Include="RequestCreation\RequestSigner.cs" />
     <Compile Include="RequestCreation\RequestTemplater.cs" />
     <Compile Include="RequestCreation\SignatureVersion4\Sha256.cs" />
+    <Compile Include="Serialization\IJsonSerializer.cs" />
+    <Compile Include="Serialization\JsonDotNetSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
