@@ -47,7 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RequestCreation\SignatureVersion4\CredentialType.cs" />
+    <Compile Include="RequestCreation\SignatureVersion4\AuthorizationCredential.cs" />
     <Compile Include="RequestCreation\ICreateRequestTemplates.cs" />
+    <Compile Include="RequestCreation\SignatureVersion4\IHashingAlogirthm.cs" />
     <Compile Include="RequestCreation\ISignRequests.cs" />
     <Compile Include="Model\AttributeValue.cs" />
     <Compile Include="ClientConfiguration.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="Http\Response.cs" />
     <Compile Include="RequestCreation\RequestSigner.cs" />
     <Compile Include="RequestCreation\RequestTemplater.cs" />
+    <Compile Include="RequestCreation\SignatureVersion4\Sha256.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
