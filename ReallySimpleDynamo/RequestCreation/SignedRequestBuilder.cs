@@ -5,8 +5,14 @@ namespace ReallySimpleDynamo.RequestCreation
 {
     public class SignedRequestBuilder : ICreateSignedRequests
     {
+        private readonly ISignRequests _signer;
         public const string Iso8601BasicDateTimeFormat = "yyyyMMddTHHmmssZ";
-        
+
+        public SignedRequestBuilder(ISignRequests signer)
+        {
+            _signer = signer;
+        }
+
         /// <summary>
         /// Reference: http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/MakingHTTPRequests.html
         /// </summary>
@@ -23,7 +29,7 @@ namespace ReallySimpleDynamo.RequestCreation
             req.Headers.Add("X-Amz-Date", dateBase.ToString(Iso8601BasicDateTimeFormat));
             req.Headers.Add("X-Amz-Target", awsService);
 
-            new RequestSigner().Sign(req, configuration);
+            _signer.Sign(req, configuration);
             return req;
         }
     }

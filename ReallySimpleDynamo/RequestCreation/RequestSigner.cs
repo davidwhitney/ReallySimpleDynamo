@@ -6,19 +6,24 @@ namespace ReallySimpleDynamo.RequestCreation
 {
     public class RequestSigner : ISignRequests
     {
-        // TODO: Implement hashing algos lifted from official SDK.
+        private readonly IHashingAlogirthm _hashingAlogirthm;
+
+        public RequestSigner(IHashingAlogirthm hashingAlogirthm)
+        {
+            _hashingAlogirthm = hashingAlogirthm;
+        }
+
         public void Sign(HttpWebRequest request, ClientConfiguration configuration, DateTime? timestamp = null)
         {
             var dateBase = timestamp.HasValue ? timestamp.Value : DateTime.Now;
 
-            var hashAlgo = new Sha256();
-
-            //var contentSha256 = "";
-            var signature = hashAlgo.ComputeSignature(configuration.AwsSecretAccessKey, configuration.AvailabilityZone, dateBase, request.Headers["X-Amz-Target"]);
+            var signature = _hashingAlogirthm.ComputeSignature(configuration.AwsSecretAccessKey, configuration.AvailabilityZone, dateBase, request.Headers["X-Amz-Target"]);
             var hmacCredential = new AuthorizationCredential(configuration.AwsSecretAccessKey, CredentialType.DynamoDb, dateBase, configuration.AvailabilityZone);
             
+            //var contentSha256 = "";
             //request.Headers.Add("X-Amz-Content-SHA256", contentSha256); - this might be optional, not mentioned in docs?
-            request.Headers.Add("Authorization", AuthHeader(hashAlgo, hmacCredential, signature));
+
+            request.Headers.Add("Authorization", AuthHeader(_hashingAlogirthm, hmacCredential, signature));
         }
 
         private static string AuthHeader(IHashingAlogirthm algo, AuthorizationCredential credential, string signature)

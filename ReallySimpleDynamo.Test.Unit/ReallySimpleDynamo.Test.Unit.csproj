@@ -53,6 +53,7 @@
     <Compile Include="DynamoClient\DynamoClientTests_WhenClientIsConstructed.cs" />
     <Compile Include="DynamoClient\DynamoClientTests_WhenGetTIsCalled.cs" />
     <Compile Include="RequestCreation\SignedRequestBuilderTests.cs" />
+    <Compile Include="Serialization\JsonDotNetSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

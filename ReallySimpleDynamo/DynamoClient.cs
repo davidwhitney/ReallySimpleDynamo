@@ -2,6 +2,7 @@
 using ReallySimpleDynamo.Http;
 using ReallySimpleDynamo.Model;
 using ReallySimpleDynamo.RequestCreation;
+using ReallySimpleDynamo.RequestCreation.SignatureVersion4;
 using ReallySimpleDynamo.Serialization;
 
 namespace ReallySimpleDynamo
@@ -21,7 +22,7 @@ namespace ReallySimpleDynamo
             ClientConfiguration = clientConfiguration;
             HttpClient = httpClient ?? new HttpClientWrapper();
 
-            _requestTemplater = requestCreator ?? new SignedRequestBuilder();
+            _requestTemplater = requestCreator ?? new SignedRequestBuilder(new RequestSigner(new Sha256()));
             _serializer = serializer ?? new JsonDotNetSerializer();
         }
 

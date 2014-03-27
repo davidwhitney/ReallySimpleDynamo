@@ -17,7 +17,7 @@ namespace ReallySimpleDynamo.RequestCreation.SignatureVersion4
             return Hmac(kService, "aws4_request");
         }
 
-        public string Hmac(string data, string key)
+        private static string Hmac(string data, string key)
         {
             var binaryData = Encoding.UTF8.GetBytes(data);
 
