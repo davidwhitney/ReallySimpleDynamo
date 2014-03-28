@@ -47,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CredentialDetection\Providers\AppConfigCredentialProvider.cs" />
+    <Compile Include="CredentialDetection\CredentialFactory.cs" />
+    <Compile Include="CredentialDetection\Credentials.cs" />
+    <Compile Include="CredentialDetection\Providers\InstanceMetadataCredentialProvider.cs" />
+    <Compile Include="CredentialDetection\IProvideCredentials.cs" />
     <Compile Include="Model\ResponseEnvelope.cs" />
     <Compile Include="RequestCreation\SignatureVersion4\CredentialType.cs" />
     <Compile Include="RequestCreation\SignatureVersion4\AuthorizationCredential.cs" />
