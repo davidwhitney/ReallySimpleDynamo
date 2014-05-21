@@ -37,6 +37,7 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
@@ -52,6 +53,7 @@
     <Compile Include="CredentialDetection\Credentials.cs" />
     <Compile Include="CredentialDetection\Providers\InstanceMetadataCredentialProvider.cs" />
     <Compile Include="CredentialDetection\IProvideCredentials.cs" />
+    <Compile Include="CredentialDetection\Providers\InstanceProfileAwsCredentials.cs" />
     <Compile Include="Model\ResponseEnvelope.cs" />
     <Compile Include="RequestCreation\SignatureVersion4\CredentialType.cs" />
     <Compile Include="RequestCreation\SignatureVersion4\AuthorizationCredential.cs" />

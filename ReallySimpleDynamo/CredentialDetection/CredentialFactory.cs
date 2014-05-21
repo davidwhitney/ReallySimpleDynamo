@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ReallySimpleDynamo.CredentialDetection.Providers;
+using ReallySimpleDynamo.Http;
 
 namespace ReallySimpleDynamo.CredentialDetection
 {
@@ -19,7 +20,7 @@ namespace ReallySimpleDynamo.CredentialDetection
             return new IProvideCredentials[]
             {
                 new AppConfigCredentialProvider(),
-                new InstanceMetadataCredentialProvider()
+                new InstanceMetadataCredentialProvider(new HttpClientWrapper())
             };
         }
 
@@ -31,6 +32,9 @@ namespace ReallySimpleDynamo.CredentialDetection
             }
 
             throw new InvalidOperationException("No credential providers returned AWS credentials");
+
+            // throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Access Key or Secret Key could not be found.  Add an appsetting to your App.config with the name {0} with a value of your access key.", ACCESSKEY));
+            // throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Secret Key could not be found.  Add an appsetting to your App.config with the name {0} with a value of your secret key.", SECRETKEY));
         }
     }
 }

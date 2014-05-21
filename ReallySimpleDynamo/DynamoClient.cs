@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ReallySimpleDynamo.Http;
 using ReallySimpleDynamo.Model;
 using ReallySimpleDynamo.RequestCreation;
@@ -44,5 +45,9 @@ namespace ReallySimpleDynamo
             return _serializer.Deserialize<ResponseEnvelope<T>>(response.Body);
         }
 
+        public async Task<ResponseEnvelope<T>> GetAsync<T>(string tableName, Key key) where T : class
+        {
+            return await Task.Run(() => Get<T>(tableName, key));
+        }
     }
 }
